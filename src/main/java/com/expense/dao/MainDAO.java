@@ -21,7 +21,8 @@ public class MainDAO {
     private static final String SELECT_ALL_CATEGORIES = "SELECT * FROM categories";
     private static final String SELECT_ALL_EXPENSES = "SELECT * FROM expenses";
     private static final String DELETE_CATEGORY = "DELETE FROM categories WHERE id = ?";
-    private static final String DELETE_EXPENSE = "DELETE FROM expenses WHERE id = ?";
+    private static final String DELETE_EXPENSE_BY_ID = "DELETE FROM expenses WHERE id = ?";
+    private static final String DELETE_EXPENSE_BY_CID = "DELETE FROM expenses WHERE cid = ?";
     private static final String CATEGORY_INC_COUNT = "UPDATE categories SET count = count + 1 WHERE id = ?";
     private static final String UPDATE_EXPENSE = "UPDATE expenses SET description = ?, amount = ?, date = ?, id = ? WHERE id = ?";
     private static final String UPDATE_CATEGORY = "UPDATE categories SET name = ? WHERE id = ?";
@@ -90,8 +91,12 @@ public class MainDAO {
         try(
             Connection conn = DataBaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(DELETE_CATEGORY);
+            PreparedStatement ps2 = conn.prepareStatement(DELETE_EXPENSE_BY_CID);
             ){
+
                 ps.setInt(1, cid);
+                ps2.setInt(1, cid);
+                int rowsAffected2 = ps2.executeUpdate();
                 int rowsAffected = ps.executeUpdate();
                 if(rowsAffected == 0){
                     throw new SQLException("Deleting category failed, no rows affected.");
